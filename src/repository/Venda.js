@@ -1,4 +1,5 @@
-import BaseRepository from "./BaseRepository.js";
+import BaseRepository from "./Base.js";
+
 export default class VendaRepository extends BaseRepository {
 
     constructor() {
