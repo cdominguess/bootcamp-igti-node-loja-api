@@ -23,5 +23,32 @@ export default class PgSequelize {
                 }
             }
         );
+
+        /**
+         * Armazena uma instâcia recebida da Model a ser utilizada pelos métodos padrão abaixo
+         */
+        this.instanciaModel = objModel;
     }
+
+    async buscar() {
+        console.log("VOU BUSCAR via Sequelize");
+    }
+
+    async buscarPorId(id) {
+        console.log("VOU BUSCAR por ID via Sequelize");
+    }
+
+    async criar(obj) {
+        console.log("VOU CRIAR via Sequelize", obj);
+    }
+
+    async atualizar(obj, id) {
+        console.log("VOU ATUALIZAR via Sequelize o obj e id", obj, id);
+    }
+
+    async excluir(id) {
+        console.log("VOU EXCLUIR via Sequelize", id);
+    }
+
+
 }
