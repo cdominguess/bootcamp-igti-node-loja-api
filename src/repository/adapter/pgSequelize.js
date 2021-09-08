@@ -1,31 +1,27 @@
+import Sequelize from "sequelize";
+
 export default class PgSequelize {
 
-    constructor(objConfigDB, nomeEntidade) {
-        console.log('ENV: ' + process.env.NODE_ENV);
-        console.log('ADAPTER: PgSequelize');
-        console.log('CONFIG: ', objConfigDB);
-        console.log('ENTIDADE: ', nomeEntidade);
+    /**
+     * Constructor do adapter PgSequelize, que utilizará o Sequelize para manipular dados em banco com Models dinamicamente.
+     * @param {object} objConfigDB      Objeto de configurações do banco de dados 
+     * @param {object} objModel         Objeto da Model que será manipulada 
+     */
+    constructor(objConfigDB, objModel) {
 
-
-    }
-
-    async buscar() {
-        console.log("VOU BUSCAR no PgSequelize");
-    }
-
-    async buscarPorId(id) {
-        console.log("VOU BUSCAR por ID no PgSequelize");
-    }
-
-    async criar(obj) {
-        console.log("VOU CRIAR no PgSequelize", obj);
-    }
-
-    async atualizar(obj, id) {
-        console.log("VOU ATUALIZAR no PgSequelize", obj);
-    }
-
-    async excluir(id) {
-        console.log("VOU EXCLUIR no PgSequelize", id);
+        /**
+         * Armazena uma instância da conexão do banco de dados
+         */
+        this.instanciaConexaoDb = new Sequelize(
+            `postgres://${objConfigDB.user}:${objConfigDB.password}@${objConfigDB.host}/${objConfigDB.database}`,
+            {
+                dialect: "postgres",
+                define: {
+                    timestamps: false,
+                    freezeTableName: true,
+                    underscored: true
+                }
+            }
+        );
     }
 }
