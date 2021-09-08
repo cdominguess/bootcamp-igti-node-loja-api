@@ -16,16 +16,18 @@ export default class BaseRepository {
         const objModelAux = objModel || {};
 
         const objConfigDB = (process.env.NODE_ENV === 'production') ? config.dbProd : config.dbDev;
-        
+
         if (config.adapter === 'pgPool') {
             this.adapter = new pgPool(objConfigDB, nomeEntidade);
+            //console.log('ADAPTER: PgPool');
         } else {
-            this.adapter = new pgSequelize(objConfigDB, objModelAux);
+            this.adapter = new pgSequelize(objModelAux);
+            //console.log('ADAPTER: PgSequelize');
         }
     }
 
     async buscar() {
-        return await this.adapter.buscar();
+        return await this.adapter.buscar();ø
     }
 
     async buscarPorId(id) {

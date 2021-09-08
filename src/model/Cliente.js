@@ -1,39 +1,39 @@
 import BaseModel from "./Base.js";
+import Sequelize from "sequelize";
 
 export default class ClienteModel extends BaseModel {
-
+    
     /**
-     * Cada nova model a ser criada seguirá este padrão:
-     * - Estenderá da classe Base;
-     * - No constructor passará o nome da tabela e o ojbeto com as propriedades da model em si, no padrão do Sequelize;
-     * - A classe base que fará o factory da Model e disponibilizará para uso, no atributo .factoryModelDb
+     * Novas classes de model basta estender a base e passar no contructor:
+     *  - O nome da model (IDEM ao nome da tabela)
+     *  - Um objeto contendo todas as propriedades da model, seguindo o padrão do Sequelize
      */
     constructor() {
         super('cliente', {
             clienteId: {
-                type: this.factoryModelProps.INTEGER,
+                type: Sequelize.INTEGER,
                 autoIncrement: true,
                 allowNull: false,
                 primaryKey: true
             },
             nome: {
-                type: this.factoryModelProps.STRING,
+                type: Sequelize.STRING,
                 allowNull: false
             },
             cpf: {
-                type: this.factoryModelProps.STRING,
+                type: Sequelize.STRING,
                 allowNull: false
             },
             telefone: {
-                type: this.factoryModelProps.STRING,
+                type: Sequelize.STRING,
                 allowNull: false
             },
             email: {
-                type: this.factoryModelProps.STRING,
+                type: Sequelize.STRING,
                 allowNull: false
             },
             endereco: {
-                type: this.factoryModelProps.STRING,
+                type: Sequelize.STRING,
                 allowNull: false
             }
         });

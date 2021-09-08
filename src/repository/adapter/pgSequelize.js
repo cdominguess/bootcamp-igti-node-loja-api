@@ -1,41 +1,33 @@
-import Sequelize from "sequelize";
-
 export default class PgSequelize {
 
     /**
-     * Constructor do adapter PgSequelize, que utilizará o Sequelize para manipular dados em banco com Models dinamicamente.
-     * @param {object} objConfigDB      Objeto de configurações do banco de dados 
-     * @param {object} objModel         Objeto da Model que será manipulada 
+     * Constructor do adapter PgSequelize, que Objeto da Model que será manipulada.
+     * Esta instância será completa, ou seja, a Model base se encarrega de criar uma conexão com o banco de dados utilizando 
+     * a interface do Sequelize e feito isso já define os atributos da Model.
+     * 
+     * @param {object} objModel 
      */
-    constructor(objConfigDB, objModel) {
-
-        /**
-         * Armazena uma instância da conexão do banco de dados
-         */
-        this.instanciaConexaoDb = new Sequelize(
-            `postgres://${objConfigDB.user}:${objConfigDB.password}@${objConfigDB.host}/${objConfigDB.database}`,
-            {
-                dialect: "postgres",
-                define: {
-                    timestamps: false,
-                    freezeTableName: true,
-                    underscored: true
-                }
-            }
-        );
-
+    constructor(objModel) {
         /**
          * Armazena uma instâcia recebida da Model a ser utilizada pelos métodos padrão abaixo
          */
-        this.instanciaModel = objModel;
+        this.instanciaModel = objModel.instanciaFactoryModel;
     }
 
     async buscar() {
-        console.log("VOU BUSCAR via Sequelize");
+        try {
+            return await this.instanciaModel.findAll();
+        } catch (err) {
+            throw err;
+        }
     }
 
     async buscarPorId(id) {
-        console.log("VOU BUSCAR por ID via Sequelize");
+        try {
+            return await this.instanciaModel.findByPk(id);
+        } catch (err) {
+            throw err;
+        }
     }
 
     async criar(obj) {
