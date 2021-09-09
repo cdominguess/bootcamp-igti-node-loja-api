@@ -31,16 +31,70 @@ export default class PgSequelize {
     }
 
     async criar(obj) {
-        console.log("VOU CRIAR via Sequelize", obj);
+        try {
+            const objCriar = this._converterParaLowerCamelCase(obj);
+            const objCriado = await this.instanciaModel.create(objCriar);
+
+            return objCriado;
+        } catch (err) {
+            throw err;
+        }
     }
 
     async atualizar(obj, id) {
-        console.log("VOU ATUALIZAR via Sequelize o obj e id", obj, id);
+        try {
+            const objAtualizar = this._converterParaLowerCamelCase(obj);
+
+            await this.instanciaModel.update(objAtualizar, {
+                where: { clienteId: id }
+            });
+
+            return await this.instanciaModel.findByPk(id);
+        } catch (err) {
+            throw err;
+        }
     }
 
     async excluir(id) {
-        console.log("VOU EXCLUIR via Sequelize", id);
+        try {
+            await this.instanciaModel.destroy({
+                where: { clienteId: id }
+            });
+        } catch (err) {
+            throw err;
+        }
     }
 
+    /**
+     * Converte as chaves de um objeto que conter _ para o padrão lowerCamelCase
+     * @param {object} obj 
+     * @returns object
+     */
+    _converterParaLowerCamelCase(obj) {
+        let arr = [];
 
+        // Percorre as linhas do objeto
+        Object.entries(obj).forEach((dadosObj, indice) => {
+            let arrItemObj = [];
+            let chaveItemObj = dadosObj[0];
+            let valorItemObj = dadosObj[1];
+
+            // Se tiver _ na chave de alguma linha do objeto, deve-se alterar para o padrão camelCase
+            const partesChaveItemObj = chaveItemObj.split('_');
+            if (partesChaveItemObj.length > 1) {
+                let arrPalavraLowerCamelCase = [];
+                partesChaveItemObj.forEach((palavra, indice) => {
+                    if (indice > 0) arrPalavraLowerCamelCase.push(palavra[0].toUpperCase() + palavra.substr(1));
+                });
+                chaveItemObj = partesChaveItemObj[0] + arrPalavraLowerCamelCase.join('');
+            }
+
+            // A chave da linha do objeto Alterado para camelCase ou não, adiciona no array que recriará o objeto 
+            arrItemObj.push(chaveItemObj);
+            arrItemObj.push(valorItemObj);
+            arr.push(arrItemObj);
+        });
+
+        return Object.fromEntries(arr);
+    }
 }
