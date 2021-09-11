@@ -1,22 +1,38 @@
+import { Sequelize } from "sequelize";
+import config from "../../config.js";
+
 export default class PgSequelize {
 
     /**
      * Constructor do adapter PgSequelize, que Objeto da Model que será manipulada.
-     * Esta instância será completa, ou seja, a Model base se encarrega de criar uma conexão com o banco de dados utilizando 
-     * a interface do Sequelize e feito isso já define os atributos da Model.
+     * Esta instância da Model terá apenas o nome e atributos para o Factory da model, que fica
+     * sob a responsabilidade aqui do adapter PgSequelize
      * 
      * @param {object} objModel 
      */
     constructor(objModel) {
-        /**
-         * Armazena uma instâcia recebida da Model a ser utilizada pelos métodos padrão abaixo
-         */
-        this.instanciaModel = objModel.instanciaFactoryModel;
+        const objConfigDB = (process.env.NODE_ENV === 'production') ? config.dbProd : config.dbDev;
+
+        // Cria a conexão com o banco de dados
+        this.instanciaConexaoDb = new Sequelize(
+            `postgres://${objConfigDB.user}:${objConfigDB.password}@${objConfigDB.host}/${objConfigDB.database}`,
+            {
+                dialect: "postgres",
+                define: {
+                    timestamps: false,
+                    freezeTableName: true,
+                    underscored: true
+                }
+            }
+        );
+
+        // Recebe o nome e atributos do objModel e cria uma instância de Model do Sequelize que será utilizada nos métodos abaixo
+        this.instanciaFactoryModel = this.instanciaConexaoDb.define(objModel.nome, objModel.atributos);
     }
 
     async buscar() {
         try {
-            return await this.instanciaModel.findAll();
+            return await this.instanciaFactoryModel.findAll();
         } catch (err) {
             throw err;
         }
@@ -24,7 +40,7 @@ export default class PgSequelize {
 
     async buscarPorId(id) {
         try {
-            return await this.instanciaModel.findByPk(id);
+            return await this.instanciaFactoryModel.findByPk(id);
         } catch (err) {
             throw err;
         }
@@ -33,7 +49,7 @@ export default class PgSequelize {
     async criar(obj) {
         try {
             const objCriar = this._converterParaLowerCamelCase(obj);
-            const objCriado = await this.instanciaModel.create(objCriar);
+            const objCriado = await this.instanciaFactoryModel.create(objCriar);
 
             return objCriado;
         } catch (err) {
@@ -45,7 +61,7 @@ export default class PgSequelize {
         try {
             const objAtualizar = this._converterParaLowerCamelCase(obj);
 
-            await this.instanciaModel.update(objAtualizar, {
+            await this.instanciaFactoryModel.update(objAtualizar, {
                 where: { clienteId: id }
             });
 
@@ -57,7 +73,7 @@ export default class PgSequelize {
 
     async excluir(id) {
         try {
-            await this.instanciaModel.destroy({
+            await this.instanciaFactoryModel.destroy({
                 where: { clienteId: id }
             });
         } catch (err) {
