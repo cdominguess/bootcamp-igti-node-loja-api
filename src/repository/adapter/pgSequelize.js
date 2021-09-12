@@ -91,7 +91,7 @@ export default class PgSequelize {
      async filtrar(arrCampos, arrValores) {
         const conn = await this._objConexao.connect();
         try {
-            console.log('falta implementar');
+            console.log('falta implementar!!');
             return true;
         } catch (err) {
             throw err;
