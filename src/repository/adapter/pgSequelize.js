@@ -92,7 +92,7 @@ export default class PgSequelize {
         const conn = await this._objConexao.connect();
         try {
             console.log('falta implementar');
-            return await true;
+            return true;
         } catch (err) {
             throw err;
         }
