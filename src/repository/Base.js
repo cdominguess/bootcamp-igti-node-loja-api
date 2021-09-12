@@ -27,7 +27,7 @@ export default class BaseRepository {
     }
 
     async buscar() {
-        return await this.adapter.buscar();ø
+        return await this.adapter.buscar();
     }
 
     async buscarPorId(id) {

@@ -81,6 +81,23 @@ export default class PgSequelize {
         }
     }
 
+    
+    /**
+     * Método que busca campos dinamicamente em uma tabela com base nos filtros passados
+     * @param {array} arrCampos 
+     * @param {array} arrValores 
+     * @returns 
+     */
+     async filtrar(arrCampos, arrValores) {
+        const conn = await this._objConexao.connect();
+        try {
+            console.log('falta implementar');
+            return await true;
+        } catch (err) {
+            throw err;
+        }
+    }
+
     /**
      * Converte as chaves de um objeto que conter _ para o padrão lowerCamelCase
      * @param {object} obj 
