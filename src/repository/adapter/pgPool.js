@@ -1,4 +1,5 @@
 import pg from 'pg';
+import config from "../../config.js";
 
 export default class PgPool {
 
@@ -6,10 +7,11 @@ export default class PgPool {
      * Constructor do adapter PgPool, que utilizará o driver nativo do postgreSQL 
      * para manipular dados em banco com querys escritas dinamicamente.
      * 
-     * @param {object} objConfigDB      Objeto de configurações do banco de dados 
      * @param {string} nomeEntidade     Nome da entidade que será manipulada
      */
-    constructor(objConfigDB, nomeEntidade) {
+    constructor(nomeEntidade) {
+        const objConfigDB = (process.env.NODE_ENV === 'production') ? config.dbProd : config.dbDev;
+
         const objPool = new pg.Pool({
             connectionString: `postgres://${objConfigDB.user}:${objConfigDB.password}@${objConfigDB.host}/${objConfigDB.database}`
         });

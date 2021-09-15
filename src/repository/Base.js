@@ -9,10 +9,11 @@ export default class BaseRepository {
      *  - Quando usar o adapter PgPool: Recebe no contructor o nome da entidade que será manipulada 
      *  - Quando usar o adapter PgSequelize: Recebe no contructor o objeto da Model será manipulada 
      * 
-     * @param {string} nomeEntidade
-     * @param {object} objModel
+     * @param {string} nomeEntidade     Nome da entidade a ser manipulada
+     * @param {string} adapterDb        Adaptador de acesso ao banco de dados que será utilizado
+     * @param {object} objModel         Seadaptador for Sequelize, passar o objeto da model
      */
-    constructor(nomeEntidade, objModel) {
+    constructor(nomeEntidade, adapterDb, objModel) {
         const objModelAux = objModel || {};
 
         const objConfigDB = (process.env.NODE_ENV === 'production') ? config.dbProd : config.dbDev;

@@ -15,6 +15,6 @@ export default class ClienteRepository extends BaseRepository {
      * - Por fim o adapter recebe esta instância e usa a mesma em seus métodos default: buscar, buscarPorId, criar, atualizar e excluir.
      */
     constructor() {
-        super('cliente', new ClienteModel());
+        super('cliente', 'pgSequelize', new ClienteModel());
     }
 }

@@ -4,7 +4,7 @@ import BaseRepository from "./Base.js";
 export default class ProdutoRepository extends BaseRepository {
 
     constructor() {
-        super('produto', new ProdutoModel());
+        super('produto', 'pgSequelize', new ProdutoModel());
     }
 
     /**

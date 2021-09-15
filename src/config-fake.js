@@ -1,6 +1,5 @@
 const config = {
     porta: 9902,
-    adapter: "pgPool",
     dbDev: {
         host: "?????",
         database: '?????',

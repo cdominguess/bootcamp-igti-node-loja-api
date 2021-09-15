@@ -4,6 +4,6 @@ import BaseRepository from "./Base.js";
 export default class VendaRepository extends BaseRepository {
 
     constructor() {
-        super('venda', new VendaModel());
+        super('venda', 'pgSequelize', new VendaModel());
     }
 }
