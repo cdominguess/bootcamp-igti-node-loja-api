@@ -13,6 +13,9 @@ const config = {
         user: '?????',
         password: '?????',
         port: 5432
+    },
+    noSql: {
+        urlConexao: '?????'
     }
 };
 

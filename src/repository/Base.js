@@ -1,6 +1,6 @@
 import pgPool from "./adapter/pgPool.js";
 import pgSequelize from "./adapter/pgSequelize.js";
-import config from "../config.js";
+import pgMongoDb from "./adapter/pgMongoDb.js";
 
 export default class BaseRepository {
 
@@ -14,16 +14,15 @@ export default class BaseRepository {
      * @param {object} objModel         Seadaptador for Sequelize, passar o objeto da model
      */
     constructor(nomeEntidade, adapterDb, objModel) {
-        const objModelAux = objModel || {};
-
-        const objConfigDB = (process.env.NODE_ENV === 'production') ? config.dbProd : config.dbDev;
-
-        if (config.adapter === 'pgPool') {
-            this.adapter = new pgPool(objConfigDB, nomeEntidade);
+        if (adapterDb === 'pgPool') {
+            this.adapter = new pgPool(nomeEntidade);
             //console.log('ADAPTER: PgPool');
-        } else {
-            this.adapter = new pgSequelize(objModelAux);
+        } else if (adapterDb === 'pgSequelize') {
+            this.adapter = new pgSequelize(objModel);
             //console.log('ADAPTER: PgSequelize');
+        } else {
+            this.adapter = new pgMongoDb(nomeEntidade);
+            //console.log('ADAPTER: pgMongoDb');
         }
     }
 
@@ -31,8 +30,10 @@ export default class BaseRepository {
         return await this.adapter.buscar();
     }
 
-    async buscarPorId(id) {
-        return await this.adapter.buscarPorId(id);
+    async buscarPorId(id, nomeCampoId) {
+        const nomeCampoIdAux = nomeCampoId || null;
+
+        return await this.adapter.buscarPorId(id, nomeCampoIdAux);
     }
 
     async criar(obj) {
