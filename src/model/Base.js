@@ -11,8 +11,9 @@ export default class BaseModel {
      * @param {string} nome 
      * @param {object} atributos 
      */
-    constructor(nome, atributos) {
+    constructor(nome, atributos, objRelacionamento) {
         this.nome = nome;
         this.atributos = atributos;
+        this.relacionamento = objRelacionamento || null
     }
 }

@@ -28,10 +28,39 @@ export default class PgSequelize {
 
         // Recebe o nome e atributos do objModel e cria uma instância de Model do Sequelize que será utilizada nos métodos abaixo
         this.instanciaFactoryModel = this.instanciaConexaoDb.define(objModel.nome, objModel.atributos);
+
+        // Armazena o conteúdo da model que veio por parâmetro
+        objModel = objModel;
+
+        this.arrIncludesFindAll = [];
+
+        /**
+         * Se o atributo de relacionamento com outra model tiver sido passado na model atual, deve-se relacionar usando o método .belongsTo
+         * Como este método recebe no primeiro parâmetro uma model criada pelo método .define do Sequelize, é necessário fazer o mesmo aqui,
+         * instanciando as models que vem no array de models de relacionamento 
+         */
+        if (objModel.relacionamento != null) {
+            for (let i = 0; i < objModel.relacionamento.length; i++) {
+                // É necessário instanciar o objeto model que veio em cada relacionamento, para ter acesso ao nome e seus atributos
+                const objRelacionar = new objModel.relacionamento[i].model();
+
+                // Cria uma instância da model do Sequelize para cada relacionamento  
+                const ObjModelRelacionamento = this.instanciaConexaoDb.define(objRelacionar.nome, objRelacionar.atributos);
+                this.instanciaFactoryModel.belongsTo(ObjModelRelacionamento, { foreignKey: objModel.relacionamento[i].pkModel });
+
+                // Por fim adiciona esta instância em um array de model a serem incluídas como parâmetro no findAll
+                this.arrIncludesFindAll.push({ model: ObjModelRelacionamento });
+            }
+        }
     }
 
     async buscar() {
         try {
+            if (this.arrIncludesFindAll.length > 0) {
+                const includes = { include : this.arrIncludesFindAll };
+                return await this.instanciaFactoryModel.findAll(includes);
+            }
+
             return await this.instanciaFactoryModel.findAll();
         } catch (err) {
             throw err;
